@@ -1,122 +1,84 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+// Importing React hooks and the CSS file
+import { useEffect, useState } from "react";
+import "./App.css";
 
+// React state variables
+// Store data that will apear in the UI
+// When they change - it will update
 function App() {
-  const [count, setCount] = useState(0)
+  const [secureScore, setSecureScore] = useState(null);
+  const [securityGaps, setSecurityGaps] = useState([]);
+  const [complianceStatus, setComplianceStatus] = useState("Loading...");
 
+  // Fetching data from backend
+  // useEffect runs once the page loads
+  useEffect(() => {
+    // Example API calls — replace with backend endpoints later
+    fetch("http://localhost:3001/secure-score")
+      .then((res) => res.json())
+      .then((data) => setSecureScore(data))
+      .catch(() => setSecureScore({ current: 0, max: 0 }));
+
+    fetch("http://localhost:3001/security-gaps")
+      .then((res) => res.json())
+      .then((data) => setSecurityGaps(data))
+      .catch(() => setSecurityGaps([]));
+
+    // Simulated compliance status
+    setTimeout(() => setComplianceStatus("Compliant"), 1000);
+  }, []);
+
+  // UI layout - what the user sees
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
+    <div className="dashboard">
+
+      {/* Header section */}
+      <header className="header">
+        <h1>Microsoft 365 Security & Compliance Dashboard</h1>
+        <p>Monitor your organization’s security posture and compliance status.</p>
+      </header>
+
+      {/* Secure score section */}
+      <section className="score-section">
+        <h2>Secure Score</h2>
+        {secureScore ? (
           <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
+            Current Score: <strong>{secureScore.current}</strong> / {secureScore.max}
           </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
+        ) : (
+          <p>Loading Secure Score...</p>
+        )}
+      </section>
+      
+      {/* Security gaps section */}
+      <section className="gaps-section">
+        <h2>Security Gaps</h2>
+        {securityGaps.length > 0 ? (
+          <ul>
+            {securityGaps.map((gap, index) => (
+              <li key={index}>
+                <strong>{gap.title}</strong> – {gap.description}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No security gaps detected.</p>
+        )}
       </section>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
+      {/* Compliance status section */}
+      <section className="compliance-section">
+        <h2>Compliance Status</h2>
+        <p>{complianceStatus}</p>
       </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+       
+       {/* Footer */}
+      <footer className="footer">
+        <p>© 2026 Microsoft 365 Security & Compliance Dashboard</p>
+      </footer>
+    </div>
+  );
 }
 
-export default App
+export default App;
+
