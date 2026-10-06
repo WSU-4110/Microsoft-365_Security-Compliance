@@ -6,10 +6,15 @@
 
 
 Katherine Carroll - Frontend (React)
+
 Raz Lulgjuraj - Storage & Database (PostgreSQL)
+
 Jad Sammoudi - Testing & Integration (Jest)
+
 Omm Patel - Backend (Node.js)
+
 Samantak Behera - Backend (Express)
+
 
 
 
