@@ -1,33 +1,118 @@
 /* Main dashboard container */
 .dashboard {
   font-family: Inter, sans-serif;
-  color: #222222;
-  background-color: #d9deec;
+  color: var(--text);
+  background-color: var(--bg);
   padding: 2rem;
+  max-width: 900px;
+  margin: auto;
+}
+
+/* Themes */
+.theme-blue {
+  --bg: #e8f0fe;        /* soft blue background */
+  --card: #cfe0f5;      /* FIXED: real blue card */
+  --text: #1a1a1a;
+  --accent: #005a9e;    /* deeper blue accent */
+  --shadow: rgba(0, 90, 158, 0.25);
+}
+
+.theme-green {
+  --bg: #e8f5e9;
+  --card: #c8d9c0;
+  --text: #1a3d1a;
+  --accent: #2e8b57;
+  --shadow: rgba(46, 139, 87, 0.35);
+}
+
+.theme-purple {
+  --bg: #f3eaff;
+  --card: #c7b8e3;
+  --text: #2a1f3d;
+  --accent: #aa3bff;
+  --shadow: rgba(106, 90, 205, 0.35);
 }
 
 /* Header at the top */
 .header {
   text-align: center;
-  margin-bottom: auto;
+  margin-bottom: 2rem;
+}
+
+.header h1 {
+  color: var(--accent);
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.header p {
+  color: #555;
+  margin-top: 0.5rem;
 }
 
 /* Card style selections */
 .score-section,
 .gaps-section,
 .compliance-section {
-  background-color: #7b859c;
+  background-color: var(--card);
   border-radius: 8px;
   padding: 1.5rem;
   margin-bottom: 1.5rem;
-  box-shadow: 0 2px 6px rgba(86,93,109);
+  box-shadow: 0 2px 6px var(--shadow);
+  border-left: 6px solid var(--accent);
+  border-right: 6px solid var(--accent);
+}
+
+.score-section h2,
+.gaps-section h2,
+.compliance-section h2 {
+  color: var(--text);
+  margin-bottom: 1rem;
 }
 
 /* Footer at the bottom */
 .footer {
   text-align: center;
   font-size: 1rem;
-  color: #212d3e;
+  color: var(--accent);
+  margin-top: 2rem;
+}
+
+/* Theme switcher container (top-right corner) */
+.theme-switcher {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 12px;
+}
+
+/* Circle buttons */
+.theme-circle {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid var(--border);
+  box-shadow: var(--shadow);
+  transition: transform 0.2s ease;
+}
+
+.theme-circle:hover {
+  transform: scale(1.15);
+}
+
+/* Circle colors */
+.theme-circle.blue {
+  background-color: #0078d4;
+}
+
+.theme-circle.green {
+  background-color: #2e8b57;
+}
+
+.theme-circle.purple {
+  background-color: #aa3bff;
 }
 
 

@@ -5,10 +5,12 @@ import "./App.css";
 // React state variables
 // Store data that will apear in the UI
 // When they change - it will update
+// Adding color themes
 function App() {
   const [secureScore, setSecureScore] = useState(null);
   const [securityGaps, setSecurityGaps] = useState([]);
   const [complianceStatus, setComplianceStatus] = useState("Loading...");
+  const [theme, setTheme] = useState("theme-blue");
 
   // Fetching data from backend
   // useEffect runs once the page loads
@@ -30,7 +32,13 @@ function App() {
 
   // UI layout - what the user sees
   return (
-    <div className="dashboard">
+    <div className={`dashboard ${theme}`}>
+      {/* Buttons to change color theme */}
+      <div className="theme-switcher">
+        <div className="theme-circle blue" onClick={() => setTheme("theme-blue")}></div>
+        <div className="theme-circle green" onClick={() => setTheme("theme-green")}></div>
+        <div className="theme-circle purple" onClick={() => setTheme("theme-purple")}></div>
+      </div>
 
       {/* Header section */}
       <header className="header">
