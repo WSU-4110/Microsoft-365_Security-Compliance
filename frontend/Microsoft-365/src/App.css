@@ -8,6 +8,43 @@
   margin: auto;
 }
 
+/* Login box*/
+.login-container {
+  max-width: 350px;
+  margin: 100px auto;
+  padding: 2rem;
+  background: var(--card);
+  border-radius: 10px;
+  box-shadow: 0 2px 6px var(--shadow);
+  text-align: center;
+}
+
+/* Inputs */
+.login-container input {
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+
+/* Login button */
+.login-container button {
+  width: 100%;
+  padding: 0.8rem;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Error message */
+error {
+  color: red;
+  margin-top: 1rem;
+}
+
 /* Themes */
 .theme-blue {
   --bg: #e8f0fe;        /* soft blue background */
