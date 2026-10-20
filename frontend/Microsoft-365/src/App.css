@@ -46,11 +46,18 @@ error {
 }
 
 /* Themes */
-.theme-blue {
-  --bg: #e8f0fe;        /* soft blue background */
-  --card: #cfe0f5;      /* FIXED: real blue card */
+.theme-auto {
+  --bg: #f5f5f5;
+  --card: #ffffff;
   --text: #1a1a1a;
-  --accent: #005a9e;    /* deeper blue accent */
+  --accent: #4a4a4a;
+}
+
+.theme-blue {
+  --bg: #e8f0fe;
+  --card: #cfe0f5;    
+  --text: #1a1a1a;
+  --accent: #005a9e;  
   --shadow: rgba(0, 90, 158, 0.25);
 }
 

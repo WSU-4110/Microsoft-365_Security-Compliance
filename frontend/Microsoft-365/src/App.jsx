@@ -26,7 +26,7 @@ function App() {
   const [secureScore, setSecureScore] = useState(null);
   const [securityGaps, setSecurityGaps] = useState([]);
   const [complianceStatus, setComplianceStatus] = useState("Loading...");
-  const [theme, setTheme] = useState("theme-blue");
+  const [theme, setTheme] = useState("theme-auto");
 
   // Fetching data from backend
   // useEffect runs once the page loads

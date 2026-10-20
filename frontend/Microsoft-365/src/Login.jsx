@@ -82,6 +82,18 @@ function Login({ onLogin }) {
             {error && (<p className="error">{error}</p>
             )}
 
+            {/* Create Account Option */}
+            <p className="create-account-text">
+                Don’t have an account?
+                <button 
+                    type="button" 
+                    className="create-account-btn"
+                    onClick={() => window.location.href = "/register"}
+                >
+                    Create Account
+                </button>
+            </p>
+
                    {/* Footer */}
             <footer className="footer">
                 <p>© 2026 Microsoft 365 Security & Compliance Dashboard</p>
