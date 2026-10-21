@@ -18,6 +18,12 @@ function Login({ onLogin }) {
     const handleSubmit = async (e) => {
         e.preventDefault(); // Keeps the page from refreshing
 
+        // Demo Login
+        if (username === "admin" && password === "password") {
+            onLogin("demo-token");   
+            return;          
+    }
+
         try {
             // Send login request to backend
             const res = await fetch("http://localhost:5173/login",
