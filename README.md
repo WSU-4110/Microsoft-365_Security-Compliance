@@ -11,9 +11,9 @@ Raz Lulgjuraj - Storage & Database (PostgreSQL)
 
 Jad Sammoudi - Testing & Integration (Jest)
 
-Omm Patel - Backend (Node.js)
+Omm Patel - Backend (Express)
 
-Samantak Behera - Backend (Express)
+Samantak Behera 
 
 
 
