@@ -1,9 +1,12 @@
 // Importing React hooks and the CSS file
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import { useEffect, useState } from "react";
 import "./App.css";
+import "./index.css"
 
 // Import the Login component
 import Login from "./Login";
+import Register from "./Register";
 
 // React state variables
 // Store data that will apear in the UI
@@ -31,6 +34,9 @@ function App() {
   // Fetching data from backend
   // useEffect runs once the page loads
   useEffect(() => {
+
+    if (!token) return;
+
     // Example API calls — replace with backend endpoints later
     fetch("http://localhost:3001/secure-score")
       .then((res) => res.json())
@@ -46,14 +52,30 @@ function App() {
     setTimeout(() => setComplianceStatus("Compliant"), 1000);
   }, [token]); // Runs again when the token changes
 
-  // Login screen
-  if (!token) {
-    return <Login onLogin={handleLogin} />;
-  }
-
-  // UI layout - what the user sees
   return (
-    <div className={`dashboard ${theme}`}>
+    <Router>
+      <Routes>
+
+        {/* Login Page*/}
+        <Route
+        path="/login"
+        element={<Login onLogin={handleLogin} />}
+        />
+
+        {/* Register Page */}
+        <Route
+        path="/register"
+        element={<Register />}
+        />
+
+        {/* Dashboard Page */}
+        <Route
+        path="/"
+        element={
+          token ? (
+          <div className={`dashboard ${theme}`}>
+
+
       {/* Buttons to change color theme */}
       <div className="theme-switcher">
         <div className="theme-circle blue" onClick={() => setTheme("theme-blue")}></div>
@@ -101,11 +123,18 @@ function App() {
         <p>{complianceStatus}</p>
       </section>
        
-       {/* Footer */}
-      <footer className="footer">
-        <p>© 2026 Microsoft 365 Security & Compliance Dashboard</p>
-      </footer>
-    </div>
+                {/* Footer */}
+                <footer className="footer">
+                  <p>© 2026 Microsoft 365 Security & Compliance Dashboard</p>
+                </footer>
+              </div>
+            ) : (
+              <Login onLogin={handleLogin} />
+            )
+          }
+        />
+      </Routes>
+    </Router>
   );
 }
 
