@@ -22,8 +22,9 @@
 
 /* Inputs */
 .login-container input {
-  width: 100%;
+  width: 90%;
   align-items: center;
+  justify-content: center;
   padding: 0.8rem;
   margin-bottom: 1rem;
   border-radius: 6px;
@@ -204,6 +205,10 @@ error {
   color: var(--text);
 }
 
-
-
+.password-requirements {
+  font-size: 0.9rem;
+  text-align: left;
+  color: var(--text);
+  margin-bottom: 1rem;
+}
 
