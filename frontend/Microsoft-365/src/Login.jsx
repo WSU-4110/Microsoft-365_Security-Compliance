@@ -1,59 +1,20 @@
-// Import React's useState to store form input values
 import { useState } from "react";
+import useAuth from "/.useAuth";
 
-// Login component receives a function "onLogin" from App.jsx
-// When login successfull, call onLogin(token) to tell App.jsx that the user is authenticated
 function Login({ onLogin }) {
-    
-    // Store the username entered by the user
     const [username, setUsername] = useState("");
-
-    // Store the password entered by the user
     const [password, setPassword] = useState("");
 
-    // Store an error message if the login fails
-    const[error, setError] = useState("");
+    // Using the useAuth.js
+    const { login, error } = useAuth();
 
-    // Function for when the user clicks the Login button
     const handleSubmit = async (e) => {
-        e.preventDefault(); // Keeps the page from refreshing
+        e.preventDefault();
 
-        // Demo Login
-        if (username === "admin" && password === "password") {
-            onLogin("demo-token");   
-            return;          
-    }
+        const data = await login(username, password);
 
-        try {
-            // Send login request to backend
-            const res = await fetch("http://localhost:5173/login",
-            {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-
-                // Send username and password to backend
-                body: JSON.stringify( { username, password }),
-            
-            });
-
-            const data = await res.json();
-
-            // Backend returns
-            // success: true or false
-            // token: "session-token"
-
-            // If PostgreSQL finds a matching user -> success = true
-            // Otherwise success = false
-
-            if (data.success) {
-                onLogin(data.token); // Tells App.jsx that login succeeded
-            }
-            else {
-                setError("Invalid username or password");
-            }
-        }
-        catch (err) {
-            setError("Server error. Try again.")
+        if (data?.success) {
+            onLogin(data.token);
         }
     };
 
@@ -90,7 +51,7 @@ function Login({ onLogin }) {
 
             {/* Create Account Option */}
             <p className="create-account-text">
-                Don’t have an account?
+                Don't have an account?
                 <button 
                     type="button" 
                     className="create-account-btn"
