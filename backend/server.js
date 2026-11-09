@@ -1,6 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const {
+  GraphDataSource,
+  MockDataSource,
+  SecurityScoreService,
+} = require('./securityDataSources');
 
 dotenv.config();
 
@@ -10,70 +15,24 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-/* Microsoft Graph Authentication */
+/* Pick the data source (Strategy pattern) */
+// Set USE_MOCK_DATA=true in .env to use fake data while developing.
+const dataSource =
+  process.env.USE_MOCK_DATA === "true"
+    ? new MockDataSource()
+    : new GraphDataSource(
+        process.env.TENANT_ID,
+        process.env.CLIENT_ID,
+        process.env.CLIENT_SECRET
+      );
 
-async function getGraphToken() {
-  const params = new URLSearchParams();
-
-  params.append("client_id", process.env.CLIENT_ID);
-  params.append("client_secret", process.env.CLIENT_SECRET);
-  params.append(
-    "scope",
-    "https://graph.microsoft.com/.default"
-  );
-  params.append("grant_type", "client_credentials");
-
-  const response = await fetch(
-    `https://login.microsoftonline.com/${process.env.TENANT_ID}/oauth2/v2.0/token`,
-    {
-      method: "POST",
-      body: params,
-    }
-  );
-
-  const data = await response.json();
-
-  return data.access_token;
-}
-
-/* Microsoft Secure Score */
-async function getSecureScore() {
-  try {
-    const token = await getGraphToken();
-
-    const response = await fetch(
-      "https://graph.microsoft.com/v1.0/security/secureScores",
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    const data = await response.json();
-
-    return data;
-  } catch (error) {
-    console.error("Graph API Error:", error);
-
-    // Temporary fallback while developing
-    return {
-      currentScore: 68.5,
-      maxScore: 100,
-      categoryScores: {
-        identity: 35.0,
-        data: 18.5,
-        device: 15.0,
-      },
-      lastUpdated: new Date().toISOString(),
-    };
-  }
-}
+const securityService = new SecurityScoreService(dataSource);
 
 /* Health Check */
 app.get("/api/health", (req, res) => {
   res.status(200).json({
     status: "Express backend operational",
+    dataSource: dataSource.constructor.name,
     timestamp: new Date(),
   });
 });
@@ -81,12 +40,10 @@ app.get("/api/health", (req, res) => {
 /* Secure Score */
 app.get("/api/security/score", async (req, res) => {
   try {
-    const graphData = await getSecureScore();
-
-    res.status(200).json(graphData);
+    const score = await securityService.getSecureScore();
+    res.status(200).json(score);
   } catch (error) {
     console.error(error);
-
     res.status(500).json({
       error: "Failed to retrieve secure score",
     });
@@ -126,27 +83,16 @@ app.get("/api/security/gaps", (req, res) => {
 
 /* Scan History */
 
-app.get("/api/scans/history", (req, res) => {
-  res.status(200).json([
-    {
-      scanId: "SCN-1001",
-      date: "2026-10-10",
-      score: 62.0,
-      openGaps: 5,
-    },
-    {
-      scanId: "SCN-1002",
-      date: "2026-10-14",
-      score: 65.5,
-      openGaps: 4,
-    },
-    {
-      scanId: "SCN-1003",
-      date: "2026-10-18",
-      score: 68.5,
-      openGaps: 2,
-    },
-  ]);
+app.get("/api/scans/history", async (req, res) => {
+  try {
+    const history = await securityService.getScanHistory();
+    res.status(200).json(history);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: "Failed to retrieve scan history",
+    });
+  }
 });
 
 /* Start Server */
