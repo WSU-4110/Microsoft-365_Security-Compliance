@@ -1,0 +1,14 @@
+[
+  {
+    "id": "contoso",
+    "name": "Contoso Ltd",
+    "industry": "Professional services",
+    "domain": "contoso.com",
+    "tier": "Managed Security Plus",
+    "contact": "Jane Doe, Office Manager",
+    "frameworks": ["CIS Controls v8"],
+    "tenantId": "00000000-0000-0000-0000-000000000000",
+    "clientId": "00000000-0000-0000-0000-000000000000",
+    "clientSecret": "paste-the-client-secret-here"
+  }
+]

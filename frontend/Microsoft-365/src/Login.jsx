@@ -1,111 +1,73 @@
-// Import React's useState to store form input values
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { apiFetch } from "./api";
 
-// Login component receives a function "onLogin" from App.jsx
-// When login successfull, call onLogin(token) to tell App.jsx that the user is authenticated
+// Calls onLogin(token, email) when the backend accepts the email and password
 function Login({ onLogin }) {
-    
-    // Store the username entered by the user
-    const [username, setUsername] = useState("");
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-    // Store the password entered by the user
-    const [password, setPassword] = useState("");
-
-    // Store an error message if the login fails
-    const[error, setError] = useState("");
-
-    // Function for when the user clicks the Login button
-    const handleSubmit = async (e) => {
-        e.preventDefault(); // Keeps the page from refreshing
-
-        // Demo Login
-        if (username === "admin" && password === "password") {
-            onLogin("demo-token");   
-            return;          
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    try {
+      const data = await apiFetch("/api/auth/login", {
+        method: "POST",
+        body: { email, password },
+      });
+      onLogin(data.token, data.email, data.role);
+      navigate("/");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
+  };
 
-        try {
-            // Send login request to backend
-            const res = await fetch("http://localhost:5173/login",
-            {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
+  return (
+    <div className="login-container">
+      <h1>Northwatch</h1>
+      <p className="login-tagline">Microsoft 365 security and compliance for managed service providers</p>
+      <h2>Sign in</h2>
 
-                // Send username and password to backend
-                body: JSON.stringify( { username, password }),
-            
-            });
+      <form onSubmit={handleSubmit}>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <button type="submit" disabled={loading}>
+          {loading ? "Signing in..." : "Sign in"}
+        </button>
+      </form>
 
-            const data = await res.json();
+      {error && <p className="error">{error}</p>}
 
-            // Backend returns
-            // success: true or false
-            // token: "session-token"
+      <p className="create-account-text">
+        Don’t have an account?
+        <button type="button" className="create-account-btn" onClick={() => navigate("/register")}>
+          Create account
+        </button>
+      </p>
 
-            // If PostgreSQL finds a matching user -> success = true
-            // Otherwise success = false
-
-            if (data.success) {
-                onLogin(data.token); // Tells App.jsx that login succeeded
-            }
-            else {
-                setError("Invalid username or password");
-            }
-        }
-        catch (err) {
-            setError("Server error. Try again.")
-        }
-    };
-
-    return (
-        <div className="login-container">
-            
-            <h1>Microsoft 365 Security & Compliance Dashboard</h1>
-            <h2>Login</h2>
-
-            <form onSubmit={handleSubmit}>
-                {/* Username input */}
-                <input
-                    type="text"
-                    placeholder="Username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                />
-
-                {/* Password input */}
-                <input
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-
-                {/* Login button */}
-                <button type="submit">Login</button>
-            </form>
-
-            {/* Show error message */}
-            {error && (<p className="error">{error}</p>
-            )}
-
-            {/* Create Account Option */}
-            <p className="create-account-text">
-                Don’t have an account?
-                <button 
-                    type="button" 
-                    className="create-account-btn"
-                    onClick={() => window.location.href = "/register"}
-                >
-                    Create Account
-                </button>
-            </p>
-
-                   {/* Footer */}
-            <footer className="footer">
-                <p>© 2026 Microsoft 365 Security & Compliance Dashboard</p>
-            </footer>
-        </div>
-    );
+      <footer className="footer">
+        <p>© 2026 Northwatch, Microsoft 365 Security &amp; Compliance Dashboard</p>
+      </footer>
+    </div>
+  );
 }
 
 export default Login;
