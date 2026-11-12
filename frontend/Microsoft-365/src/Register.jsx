@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { apiFetch } from "./api";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -31,19 +32,19 @@ export default function Register() {
     return;
     }
 
-    const response = await fetch("http://localhost:3001/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password })
-    });
-
-    const data = await response.json();
-
-    if (data.success) {
-      setMessage("Account created successfully!");
+    try {
+      const data = await apiFetch("/api/auth/register", {
+        method: "POST",
+        body: { email, password },
+      });
+      setMessage(
+        data.role === "admin"
+          ? "Account created as the admin (first account). Taking you to sign in..."
+          : "Account created with read-only access. An admin can change your role. Taking you to sign in..."
+      );
       setTimeout(() => navigate("/login"), 1500);
-    } else {
-      setMessage(data.error);
+    } catch (err) {
+      setMessage(err.message);
     }
   };
 
@@ -90,10 +91,18 @@ export default function Register() {
           required
         />
 
-        <button type="submit">Create Account</button>
+        <button type="submit">Create account</button>
       </form>
 
       <p>{message}</p>
+
+      <p className="create-account-text">
+        Already have an account?
+        <button type="button" className="create-account-btn" onClick={() => navigate("/login")}>
+          Sign in
+        </button>
+      </p>
     </div>
   );
 }
+
