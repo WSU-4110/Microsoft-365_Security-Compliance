@@ -67,7 +67,13 @@ function Login({ onLogin }) {
 
   // JSX below defines what is displayed on the login page.
   return (
-    <div className="login-container">
+    <div className="auth-page">
+    <div className="panel auth-card">
+      <div className="auth-header">
+        <div className="brand brand-dark">
+          <div className="brand-mark"></div>
+          <span className="brand-name">NorthWatch</span>
+        </div>
 
       {/* Application name displayed at the top of the login page. */}
       <h1>Northwatch</h1>
@@ -82,7 +88,7 @@ function Login({ onLogin }) {
 
 
       {/* Login form calls handleSubmit when the user clicks Sign in. */}
-      <form onSubmit={handleSubmit}>
+      <form className="auth-form" onSubmit={handleSubmit}>
 
         {/* Email input field.
             value connects the input to the email state variable.
@@ -110,25 +116,33 @@ function Login({ onLogin }) {
         {/* Submit button.
             Disabled while the login request is processing.
             Button text changes to show the user that login is in progress. */}
-        <button type="submit" disabled={loading}>
-          {loading ? "Signing in..." : "Sign in"}
+        <button
+          type="submit"
+          className="btn btn-primary"
+          disabled={loading}
+        >
+          {loading ? "Signing In..." : "Sign In"}
         </button>
       </form>
 
 
       {/* Display an error message only when an error exists.
           For example, incorrect email or password. */}
-      {error && <p className="error">{error}</p>}
+      {error && (
+        <p className="auth-message error">
+          {error}
+        </p>
+      )}
 
 
       {/* Section that allows users without an account to register. */}
-      <p className="create-account-text">
-        Don’t have an account?
+     <div className="auth-footer">
+        <span>Don't have an account? </span>
 
         {/* Navigates the user to the registration page when clicked. */}
         <button
           type="button"
-          className="create-account-btn"
+          className="link"
           onClick={() => navigate("/register")}
         >
           Create account
