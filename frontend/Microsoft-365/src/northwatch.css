@@ -473,3 +473,76 @@ summary { cursor: pointer; color: var(--action); }
   .check-running .check-bar { animation: none; }
   .sidebar { transition: none; }
 }
+
+/* AUTHENTICATION PAGES
+   Match NorthWatch dashboard appearance */
+
+.auth-page {
+  min-height: 100vh;
+  background: var(--canvas);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 460px;
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.auth-header h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+
+.auth-header p {
+  color: var(--muted);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.auth-form input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font: inherit;
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.auth-footer {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.auth-message {
+  margin-top: 1rem;
+}
+
+.auth-message.error {
+  color: var(--bad);
+}
+
+.auth-message.success {
+  color: var(--good);
+}
+
+.password-requirements {
+  color: var(--muted);
+  font-size: 13px;
+  text-align: left;
+  line-height: 1.5;
+}
