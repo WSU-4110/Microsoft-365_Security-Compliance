@@ -63,12 +63,19 @@ export default function Register() {
   };
 
   return (
-    <div className="register-container">
+      <div className="auth-page">
+    <div className="panel auth-card">
+      <div className="auth-header">
+        <div className="brand brand-dark">
+          <div className="brand-mark"></div>
+          <span className="brand-name">NorthWatch</span>
+        </div>
+        
       {/* Page title */}
       <h2>Create Account</h2>
 
       {/* Registration form */}
-      <form onSubmit={handleRegister}>
+      <form className="auth-form" onSubmit={handleRegister}>
         {/* Email input */}
         <input
           type="email"
@@ -112,26 +119,38 @@ export default function Register() {
         />
 
         {/* Submit registration form */}
-        <button type="submit">
+        <button type="submit" className="btn btn-primary>
           Create account
         </button>
       </form>
 
       {/* Success or error message from registration process */}
-      <p>{message}</p>
 
-      {/* Link to sign in for existing users */}
-      <p className="create-account-text">
-        Already have an account?
+      {message && (
+        <p
+          className={`auth-message ${
+            message.toLowerCase().includes("created")
+              ? "success"
+              : "error"
+          }`}
+        >
+          {message}
+        </p>
+      )}
+
+      <div className="auth-footer">
+        <span>Already have an account? </span>
+
         <button
           type="button"
-          className="create-account-btn"
+          className="link"
           onClick={() => navigate("/login")}
         >
-          Sign in
+          Sign In
         </button>
-      </p>
+      </div>
     </div>
-  );
+  </div>
+);
 }
 
