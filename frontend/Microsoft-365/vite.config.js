@@ -8,4 +8,10 @@ export default defineConfig({
     react(),
     babel({ presets: [reactCompilerPreset()] })
   ],
+  // Sends /api requests to the Express backend during development
+  server: {
+    proxy: {
+      '/api': 'http://localhost:5000',
+    },
+  },
 })
