@@ -11,8 +11,7 @@ import {
 import { useState } from "react";
 
 // Import the application's CSS files.
-import "./App.css";
-import "./index.css";
+import "./northwatch.css";
 
 // Import components used throughout the application.
 import Login from "./Login";
