@@ -1,37 +1,84 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { apiFetch } from "./api";
 
+// Register page component
 export default function Register() {
+  // Allows navigation to different routes/pages
   const navigate = useNavigate();
+
+  // State variables for form fields and messages
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
 
+  // Checks whether the password meets security requirements
+  const validatePassword = (password) => {
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{12,}$/;
+
+    return passwordRegex.test(password);
+  };
+
+  // Runs when the user submits the registration form
   const handleRegister = async (e) => {
+    // Prevents the page from reloading on form submission
     e.preventDefault();
 
-    const response = await fetch("http://localhost:3001/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password })
-    });
+    // Verify that the password and confirmation match
+    if (password !== confirmPassword) {
+      setMessage("Passwords do not match.");
+      return;
+    }
 
-    const data = await response.json();
+    // Verify that the password meets complexity requirements
+    if (!validatePassword(password)) {
+      setMessage(
+        "Password must be at least 12 characters and contain an uppercase letter, lowercase letter, number, and special character."
+      );
+      return;
+    }
 
-    if (data.success) {
-      setMessage("Account created successfully!");
+    try {
+      // Send registration request to the backend API
+      const data = await apiFetch("/api/auth/register", {
+        method: "POST",
+        body: { email, password },
+      });
+
+      // Display a message based on the role assigned by the server
+      setMessage(
+        data.role === "admin"
+          ? "Account created as the admin (first account). Taking you to sign in..."
+          : "Account created with read-only access. An admin can change your role. Taking you to sign in..."
+      );
+
+      // Redirect user to the login page after 1.5 seconds
       setTimeout(() => navigate("/login"), 1500);
-    } else {
-      setMessage(data.error);
+    } catch (err) {
+      // Display any registration errors returned by the API
+      setMessage(err.message);
     }
   };
 
   return (
-    <div className="register-container">
+      <div className="auth-page">
+    <div className="panel auth-card">
+      <div className="auth-header">
+        <div className="brand brand-dark">
+          <div className="brand-mark"></div>
+          <span className="brand-name">NorthWatch</span>
+        </div>
+      </div>
+        
+      {/* Page title */}
       <h2>Create Account</h2>
 
-      <form onSubmit={handleRegister}>
-        <input 
+      {/* Registration form */}
+      <form className="auth-form" onSubmit={handleRegister}>
+        {/* Email input */}
+        <input
           type="email"
           placeholder="Email"
           value={email}
@@ -39,7 +86,23 @@ export default function Register() {
           required
         />
 
-        <input 
+        {/* Password requirements shown to the user */}
+        <p className="password-requirements">
+          Password must contain:
+          <br />
+          • At least 12 characters
+          <br />
+          • One uppercase letter
+          <br />
+          • One lowercase letter
+          <br />
+          • One number
+          <br />
+          • One special character
+        </p>
+
+        {/* Password input */}
+        <input
           type="password"
           placeholder="Password"
           value={password}
@@ -47,10 +110,48 @@ export default function Register() {
           required
         />
 
-        <button type="submit">Create Account</button>
+        {/* Confirm password input */}
+        <input
+          type="password"
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          required
+        />
+
+        {/* Submit registration form */}
+        <button type="submit" className="btn btn-primary">
+          Create account
+        </button>
       </form>
 
-      <p>{message}</p>
+      {/* Success or error message from registration process */}
+
+      {message && (
+        <p
+          className={`auth-message ${
+            message.toLowerCase().includes("created")
+              ? "success"
+              : "error"
+          }`}
+        >
+          {message}
+        </p>
+      )}
+
+      <div className="auth-footer">
+        <span>Already have an account? </span>
+
+        <button
+          type="button"
+          className="link"
+          onClick={() => navigate("/login")}
+        >
+          Sign In
+        </button>
+      </div>
     </div>
-  );
+  </div>
+);
 }
+
