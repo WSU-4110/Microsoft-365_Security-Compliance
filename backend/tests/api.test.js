@@ -15,8 +15,8 @@ let viewerToken;
 
 beforeAll(async () => {
   await request(app).post("/api/auth/register").send(admin).expect(201);
-  await request(app).post("/api/auth/register").send(viewer).expect(201);
   adminToken = (await request(app).post("/api/auth/login").send(admin)).body.token;
+  await request(app).post("/api/auth/register").set(auth(adminToken)).send(viewer).expect(201);
   viewerToken = (await request(app).post("/api/auth/login").send(viewer)).body.token;
   await jobs.scanAll("Test");
 });
@@ -89,4 +89,10 @@ test("only admins manage the team, and the last admin stays", async () => {
   await request(app).patch(`/api/team/${me.id}`).set(auth(adminToken)).send({ role: "viewer" }).expect(400);
   const other = team.find((u) => u.email === viewer.email);
   await request(app).patch(`/api/team/${other.id}`).set(auth(adminToken)).send({ role: "analyst" }).expect(200);
+});
+
+test("only admins can register new users after initial setup", async () => {
+  const newUser = { email: "intruder@northwatch.io", password: "StrongPass123!" };
+  await request(app).post("/api/auth/register").send(newUser).expect(401);
+  await request(app).post("/api/auth/register").set(auth(viewerToken)).send(newUser).expect(403);
 });
