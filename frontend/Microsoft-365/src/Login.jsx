@@ -74,6 +74,7 @@ function Login({ onLogin }) {
           <div className="brand-mark"></div>
           <span className="brand-name">NorthWatch</span>
         </div>
+      </div>
 
       {/* Application name displayed at the top of the login page. */}
       <h1>Northwatch</h1>
@@ -147,7 +148,7 @@ function Login({ onLogin }) {
         >
           Create account
         </button>
-      </p>
+      </div>
 
 
       {/* Footer displayed at the bottom of the login page. */}
@@ -155,6 +156,7 @@ function Login({ onLogin }) {
         <p>© 2026 Northwatch, Microsoft 365 Security &amp; Compliance Dashboard</p>
       </footer>
 
+    </div>
     </div>
   );
 }

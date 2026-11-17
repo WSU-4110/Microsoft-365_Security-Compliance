@@ -46,13 +46,13 @@ export function useApi(path) {
    * Reload function that can be called manually
    * to fetch fresh data from the backend.
    */
-  const reload = useCallback(asy*c () => {
-    // Do nothing if no *PI path was provided
-    if (!path* return;
+  const reload = useCallback(async () => {
+    // Do nothing if no API path was provided
+    if (!path) return;
 
     try {
-      // Reque*t data from the backend
-      cons* data = await apiFetch(path, { tok*n });
+      // Request data from the backend
+      const data = await apiFetch(path, { token });
 
       // Store the new data and the path it belongs to
       setState({ path, data });
@@ -84,12 +84,12 @@ export function useApi(path) {
      */
     let cancelled = false;
 
-    *piFetch(path, { token })
-      .th*n((data) => {
-        // Only upda*e state if the component still exi*ts
+    apiFetch(path, { token })
+      .then((data) => {
+        // Only update state if the component still exists
         if (!cancelled) {
-     *    setState({ path, data });
-    *   }
+          setState({ path, data });
+        }
       })
       .catch((err) => {
         if (cancelled) return;
