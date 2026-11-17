@@ -70,6 +70,7 @@ export default function Register() {
           <div className="brand-mark"></div>
           <span className="brand-name">NorthWatch</span>
         </div>
+      </div>
         
       {/* Page title */}
       <h2>Create Account</h2>
@@ -119,7 +120,7 @@ export default function Register() {
         />
 
         {/* Submit registration form */}
-        <button type="submit" className="btn btn-primary>
+        <button type="submit" className="btn btn-primary">
           Create account
         </button>
       </form>
